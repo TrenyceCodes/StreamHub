@@ -3,7 +3,7 @@ import { Users } from "../models/Users";
 
 export const deleteUserController = async (request: Request, response: Response) => {
     try {
-        const userId = request.params.id;
+        const userId = request.params.userId;
 
         // Validate userId (optional, depending on your requirements)
         if (!userId) {
