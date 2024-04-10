@@ -1,10 +1,10 @@
-import { Request, Response, response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { Users } from "../models/Users";
 import validator from "validator";
 import { passwordValidator } from "../utils/passwordValidator";
 import { hashPassword } from "../utils/hashPassword";
 
-export const createUserController = async (request: Request, response: Response) => {
+export const createUserController = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const {username, emailaddress, password, isLoggedIn} = request.body;
         const currentUser = await Users.exists({username});
@@ -23,18 +23,20 @@ export const createUserController = async (request: Request, response: Response)
 
         if (passwordValidator(password)) {
             return response.status(200).json({message: "Password must be 2-8 characters long"});
-        } 
+        }
         
         const hashedPassword = await hashPassword(password);
-        const user = new Users({ 
+
+        let user = new Users({ 
             username: username,
             emailaddress: emailaddress,
             password: hashedPassword,
-            isLoggedIn: isLoggedIn
+            isLoggedIn: isLoggedIn,
         });
-
+        
         await user.save();
-        return response.status(200).json({message: "User has been successfully created", data: user});
+        return response.status(201).json({message: "User has been successfully created", data: user});     
+
     } catch (error) {
         return response.status(400).json({message: "Error creating user", error: error});
     }

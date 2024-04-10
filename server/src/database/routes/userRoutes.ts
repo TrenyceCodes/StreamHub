@@ -12,6 +12,5 @@ userRouter.delete("/users/:userId", deleteUserController);
 userRouter.put("/users/:userId", updateUserController);
 userRouter.post("/users/login", loginUserController);
 userRouter.post("/users/reset_password", resetUsersPasswordController);
-//addresetUserpasswordController
 
 export default userRouter;

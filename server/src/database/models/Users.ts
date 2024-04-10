@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     },
     isLoggedIn: {
         type: Boolean,
-    }
+    },
 });
 
 const Users = mongoose.model("User", userSchema);
