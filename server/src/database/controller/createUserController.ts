@@ -1,24 +1,8 @@
 import { Request, Response, response } from "express";
 import { Users } from "../models/Users";
-import bcrypt from "bcrypt";
 import validator from "validator";
-import PasswordValidator from "password-validator";
-
-function passwordValidator(password: string) {
-    const validation = new PasswordValidator();
-    return validation.min(2).max(8).validate(password);
-}
-
-async function hashPassword(password: string): Promise<String> {
-    const saltRounds = 10;
-
-    try {
-        const hashPassword = await bcrypt.hash(password, saltRounds);
-        return hashPassword;
-    } catch (error) {
-        throw new Error("There was an issue hashing your password: " + error);
-    }
-}
+import { passwordValidator } from "../utils/passwordValidator";
+import { hashPassword } from "../utils/hashPassword";
 
 export const createUserController = async (request: Request, response: Response) => {
     try {
@@ -38,7 +22,7 @@ export const createUserController = async (request: Request, response: Response)
         }
 
         if (passwordValidator(password)) {
-            return response.status(200).json({message: ""})
+            return response.status(200).json({message: "Password must be 2-8 characters long"});
         } 
         
         const hashedPassword = await hashPassword(password);
