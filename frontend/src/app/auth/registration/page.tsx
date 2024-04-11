@@ -1,24 +1,24 @@
 "use client";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { boolean, z } from "zod";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { axiosRegisterPost } from "@/app/httpHelpers/axiosHelper";
   
   const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
     emailaddress: z.string().email({message: "Email must be valid"}).min(2),
-    password: z.string().min(2, {message: "Password must be at least 2-8 characters.",}).max(8),
+    password: z.string().min(2).max(9, {message: "Password must be at least 2-8 characters.",}),
   });
   
   export default function RegistrationPage() {
@@ -36,7 +36,8 @@ import { Input } from "@/components/ui/input"
     function onSubmit(values: z.infer<typeof formSchema>) {
       // Do something with the form values.
       // ✅ This will be type-safe and validated.
-      console.log(values)
+      const results = axiosRegisterPost(values.username, values.emailaddress, values.password);
+      console.log(results);
     }
   
     return (
