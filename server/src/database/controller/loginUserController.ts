@@ -1,11 +1,10 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import validator from "validator";
 import { passwordComparison } from "../utils/passwordComparison";
 import { Users } from "../models/Users";
 import { passwordValidator } from "../utils/passwordValidator";
-import { generateJsonWebToken } from "../middleware/JsonWebToken";
 
-export const loginUserController = async (request: Request, response: Response) => {
+export const loginUserController = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const {username, password} = request.body;
         const users = await Users.findOne({username});
@@ -19,16 +18,15 @@ export const loginUserController = async (request: Request, response: Response) 
             return response.status(400).json({message: "Invalid username or password combination"});
         }
         
-        
         if (passwordValidator(password)) {
             return response.status(200).json({message: "Password must be 2-8 characters long"});
         }
         
+        
         if (passwordMatch) {
             const user = {id: users._id, username: username};
-            await generateJsonWebToken(user, response);
             console.log("Cookie has been generated successfully");
-            return response.status(200).json({message: "Login successful"});
+            return response.status(200).json({message: "Login successful", data: {user}});
         } else {
             return response.status(400).json({message: "Invalid username or password combination"});
         }

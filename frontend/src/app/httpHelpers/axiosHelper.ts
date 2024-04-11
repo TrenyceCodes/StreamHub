@@ -1,5 +1,6 @@
 import axios from "axios";
 import { SERVER_URL } from "./serverLink";
+import { setLocalStorageItem } from "./localStorageHelper";
 
 export const axiosRegisterPost = async (username: string, emailaddress: string, password: string) => {
     const link = `${SERVER_URL}/users/register`;
@@ -24,11 +25,13 @@ export const axiosLoginPost = async (username: string, password: string) => {
         username: username,
         password: password,
     }).then((response) => {
+        setLocalStorageItem(response.data);
+        console.log(response.data);
         console.log(response.data.message);
         return response.data.message;
     }).catch((error) => {   
-        console.error();
-        throw new Error("There was an error: ", error.message);
+        console.error(error); // Print the error message
+        throw new Error("There was an error: " + error.message);
     })
 
     return results;
