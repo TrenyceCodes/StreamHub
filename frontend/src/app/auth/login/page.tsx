@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { axiosLoginPost } from "@/app/httpHelpers/axiosHelper"
+import { useToast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
   username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
@@ -23,6 +24,7 @@ const formSchema = z.object({
 })
 
 export default function LoginPage() {
+  const { toast } = useToast();
   // ...
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -33,11 +35,25 @@ export default function LoginPage() {
   })
  
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
-    const results = axiosLoginPost(values.username, values.password);
-    console.log(results)
+    
+    try {
+      const results = await axiosLoginPost(values.username, values.password);
+      toast({
+        title: "Login Message",
+        description: `${results}`,
+      })
+      console.log(results)
+      return results;
+    } catch (error) {
+      toast({
+        title: "Login Error",
+        description: "There was problem when you were logged in. Please try again."
+      })
+      console.error("There was a problem when user logged in " + error);
+    }
   }
 
   return (
@@ -51,11 +67,8 @@ export default function LoginPage() {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="BruceWayne" {...field} />
                 </FormControl>
-                <FormDescription>
-                  This is your public display name.
-                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}

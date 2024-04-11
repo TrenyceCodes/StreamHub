@@ -4,7 +4,7 @@ import validator from "validator";
 import { passwordValidator } from "../utils/passwordValidator";
 import { hashPassword } from "../utils/hashPassword";
 
-export const createUserController = async (request: Request, response: Response, next: NextFunction) => {
+export const createUserController = async (request: Request, response: Response) => {
     try {
         const {username, emailaddress, password, isLoggedIn} = request.body;
         const currentUser = await Users.exists({username});
@@ -35,7 +35,7 @@ export const createUserController = async (request: Request, response: Response,
         });
         
         await user.save();
-        return response.status(201).json({message: "User has been successfully created", data: user});     
+        return response.status(201).json({message: "Registration Successful"});     
 
     } catch (error) {
         return response.status(400).json({message: "Error creating user", error: error});

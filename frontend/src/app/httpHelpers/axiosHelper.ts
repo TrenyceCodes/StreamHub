@@ -3,7 +3,11 @@ import { SERVER_URL } from "./serverLink";
 
 export const axiosRegisterPost = async (username: string, emailaddress: string, password: string) => {
     const link = `${SERVER_URL}/users/register`;
-    const results = await axios.post(link, {username: username, emailaddress: emailaddress, password: password}).then((response) => {
+    const results = await axios.post(link, {
+        username: username, 
+        emailaddress: emailaddress, 
+        password: password
+    }).then((response) => {
         console.log(response.data.message);
         return response.data.message;
     }).catch((error) => {

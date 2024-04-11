@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { axiosRegisterPost } from "@/app/httpHelpers/axiosHelper";
+import { useToast } from "@/components/ui/use-toast";
   
   const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
@@ -22,6 +23,7 @@ import { axiosRegisterPost } from "@/app/httpHelpers/axiosHelper";
   });
   
   export default function RegistrationPage() {
+    const { toast } = useToast();
     // ...
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema),
@@ -33,11 +35,25 @@ import { axiosRegisterPost } from "@/app/httpHelpers/axiosHelper";
     })
    
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    async function onSubmit(values: z.infer<typeof formSchema>) {
       // Do something with the form values.
       // ✅ This will be type-safe and validated.
-      const results = axiosRegisterPost(values.username, values.emailaddress, values.password);
-      console.log(results);
+      
+      try {
+        const results = await axiosRegisterPost(values.username, values.emailaddress, values.password);
+        toast({
+          title: "Registration Message",
+          description: `${results}`
+        })
+        console.log(results);
+        return results;
+      } catch (error) {
+        toast({
+          title: "Login Error",
+          description: "There was a problem when you registered. Please try again."
+        })
+        console.error("There was a problem when user registered. " + error);
+      }
     }
   
     return (
