@@ -1,4 +1,4 @@
 export function setLocalStorageItem(user: any) {
-    localStorage.setItem(`${process.env.LOCAL_STORAGE_ITEM_NAME!}`, JSON.stringify(user));
+    localStorage.setItem("user", JSON.stringify(user));
 }
 

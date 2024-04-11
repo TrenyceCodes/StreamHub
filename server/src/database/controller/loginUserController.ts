@@ -25,7 +25,6 @@ export const loginUserController = async (request: Request, response: Response, 
         
         if (passwordMatch) {
             const user = {id: users._id, username: username};
-            console.log("Cookie has been generated successfully");
             return response.status(200).json({message: "Login successful", data: {user}});
         } else {
             return response.status(400).json({message: "Invalid username or password combination"});

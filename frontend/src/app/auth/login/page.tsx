@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { axiosLoginPost } from "@/app/httpHelpers/axiosHelper"
 import { useToast } from "@/components/ui/use-toast"
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
@@ -24,6 +25,7 @@ const formSchema = z.object({
 
 export default function LoginPage() {
   const { toast } = useToast();
+  const router = useRouter();
   // ...
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -44,7 +46,8 @@ export default function LoginPage() {
         title: "Login Message",
         description: `${results}`,
       })
-      console.log(results)
+      router.push("/home")
+      console.log(results);
       return results;
     } catch (error) {
       toast({

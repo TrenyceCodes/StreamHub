@@ -25,8 +25,9 @@ export const axiosLoginPost = async (username: string, password: string) => {
         username: username,
         password: password,
     }).then((response) => {
-        setLocalStorageItem(response.data);
-        console.log(response.data);
+        if (response.data.message == "Login successful") {
+            setLocalStorageItem(response.data);
+        }
         console.log(response.data.message);
         return response.data.message;
     }).catch((error) => {   
