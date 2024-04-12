@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input"
 import { axiosLoginPost } from "@/app/httpHelpers/axiosHelper"
 import { useToast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation";
+import { fetchLoginPost } from "@/app/httpHelpers/fetchHelper";
 
 const formSchema = z.object({
   username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
@@ -41,7 +42,7 @@ export default function LoginPage() {
     // ✅ This will be type-safe and validated.
     
     try {
-      const results = await axiosLoginPost(values.username, values.password);
+      const results = await fetchLoginPost(values.username, values.password);
       toast({
         title: "Login Message",
         description: `${results}`,

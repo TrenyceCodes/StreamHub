@@ -2,7 +2,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod"
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,9 +12,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { axiosRegisterPost } from "@/app/httpHelpers/axiosHelper";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+import { fetchRegisterPost } from "@/app/httpHelpers/fetchHelper";
   
   const formSchema = z.object({
     username: z.string().min(2, {message: "Username must be at least 2 characters.",}),
@@ -38,7 +37,7 @@ import { useRouter } from "next/navigation";
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
       try {
-        const results = await axiosRegisterPost(values.username, values.emailaddress, values.password);
+        const results = await fetchRegisterPost(values.username, values.emailaddress, values.password);
         toast({
           title: "Registration Message",
           description: `${results}`
@@ -46,7 +45,7 @@ import { useRouter } from "next/navigation";
         router.push("/auth/login");
       } catch (error) {
         toast({
-          title: "Login Error",
+          title: "Registration Error Error",
           description: "There was a problem when you registered. Please try again."
         })
         console.error("There was a problem when user registered. " + error);

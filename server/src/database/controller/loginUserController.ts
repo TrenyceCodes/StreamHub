@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request, Response } from "express";
 import validator from "validator";
 import { passwordComparison } from "../utils/passwordComparison";
 import { Users } from "../models/Users";
 import { passwordValidator } from "../utils/passwordValidator";
 
-export const loginUserController = async (request: Request, response: Response, next: NextFunction) => {
+export const loginUserController = async (request: Request, response: Response) => {
     try {
         const {username, password} = request.body;
         const users = await Users.findOne({username});
